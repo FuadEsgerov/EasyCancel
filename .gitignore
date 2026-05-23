@@ -1,0 +1,11 @@
+*.xcodeproj
+.DS_Store
+build/
+.build/
+DerivedData/
+*.xcuserstate
+.swiftpm/
+.claude-flow/
+
+# Contains the Supabase publishable key — keep out of git
+Sources/Services/SupabaseConfig.swift
