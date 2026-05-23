@@ -601,42 +601,42 @@
         }
       }
     },
-    "By continuing you agree to our Terms and Privacy Policy.": {
+    "By continuing you agree to our [Terms](https://easycancel.app/terms) and [Privacy Policy](https://easycancel.app/privacy).": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Durch Fortfahren stimmen Sie unseren AGB und der Datenschutzerklärung zu."
+            "value": "Durch Fortfahren stimmen Sie unseren [AGB](https://easycancel.app/terms) und der [Datenschutzerklärung](https://easycancel.app/privacy) zu."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "En continuant, vous acceptez nos Conditions et notre Politique de confidentialité."
+            "value": "En continuant, vous acceptez nos [Conditions](https://easycancel.app/terms) et notre [Politique de confidentialité](https://easycancel.app/privacy)."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Al continuar, aceptas nuestros Términos y la Política de privacidad."
+            "value": "Al continuar, aceptas nuestros [Términos](https://easycancel.app/terms) y la [Política de privacidad](https://easycancel.app/privacy)."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Continuando accetti i nostri Termini e l'Informativa sulla privacy."
+            "value": "Continuando accetti i nostri [Termini](https://easycancel.app/terms) e l'[Informativa sulla privacy](https://easycancel.app/privacy)."
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Door verder te gaan ga je akkoord met onze Voorwaarden en het Privacybeleid."
+            "value": "Door verder te gaan ga je akkoord met onze [Voorwaarden](https://easycancel.app/terms) en het [Privacybeleid](https://easycancel.app/privacy)."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kontynuując, akceptujesz nasz Regulamin i Politykę prywatności."
+            "value": "Kontynuując, akceptujesz nasz [Regulamin](https://easycancel.app/terms) i [Politykę prywatności](https://easycancel.app/privacy)."
           }
         }
       }
@@ -1557,6 +1557,46 @@
           "stringUnit": {
             "state": "translated",
             "value": "Usuń konto"
+          }
+        }
+      }
+    },
+    "Delete account?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konto löschen?"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer le compte ?"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¿Eliminar cuenta?"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eliminare l'account?"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Account verwijderen?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usunąć konto?"
           }
         }
       }
@@ -3997,6 +4037,46 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nie znaleziono subskrypcji."
+          }
+        }
+      }
+    },
+    "This permanently deletes your account and all your data. This can't be undone.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dadurch werden Ihr Konto und alle Ihre Daten dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cela supprime définitivement votre compte et toutes vos données. Cette action est irréversible."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esto elimina permanentemente tu cuenta y todos tus datos. No se puede deshacer."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questo elimina definitivamente il tuo account e tutti i tuoi dati. L'operazione è irreversibile."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hiermee worden je account en al je gegevens permanent verwijderd. Dit kan niet ongedaan worden gemaakt."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spowoduje to trwałe usunięcie konta i wszystkich danych. Tej operacji nie można cofnąć."
           }
         }
       }

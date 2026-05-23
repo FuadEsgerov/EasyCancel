@@ -102,6 +102,18 @@ final class AuthStore {
         }
     }
 
+    func deleteAccount() async {
+        errorMessage = nil
+        do {
+            try await service.deleteAccount()
+            session = nil
+            magicLinkSentTo = nil
+            phase = .onboarding
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
     private func signIn(_ operation: () async throws -> AuthSession) async {
         errorMessage = nil
         do {

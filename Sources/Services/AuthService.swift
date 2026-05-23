@@ -26,6 +26,8 @@ protocol AuthService: Sendable {
     /// Returns nil if the URL isn't an auth callback.
     func completeSignIn(from url: URL) async throws -> AuthSession?
     func signOut() async throws
+    /// GDPR account deletion: removes the user's data and signs out.
+    func deleteAccount() async throws
 }
 
 /// In-memory mock. No network — guest and Apple paths sign in instantly so the
@@ -65,6 +67,10 @@ actor MockAuthService: AuthService {
     }
 
     func signOut() async throws {
+        session = nil
+    }
+
+    func deleteAccount() async throws {
         session = nil
     }
 

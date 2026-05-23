@@ -1,10 +1,13 @@
 import SwiftUI
+import UIKit
 
 struct SettingsView: View {
     @Environment(SubscriptionStore.self) private var store
     @Environment(AuthStore.self) private var auth
     @Environment(StoreManager.self) private var storeManager
     @State private var showingPaywall = false
+    @State private var exportFile: ExportFile?
+    @State private var showingDeleteConfirm = false
 
     init() {}
 
@@ -20,6 +23,21 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .sheet(isPresented: $showingPaywall) {
                 PaywallView()
+            }
+            .sheet(item: $exportFile) { file in
+                ShareSheet(items: [file.url])
+            }
+            .confirmationDialog(
+                "Delete account?",
+                isPresented: $showingDeleteConfirm,
+                titleVisibility: .visible
+            ) {
+                Button("Delete account", role: .destructive) {
+                    Task { await auth.deleteAccount() }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This permanently deletes your account and all your data. This can't be undone.")
             }
         }
     }
@@ -76,10 +94,12 @@ struct SettingsView: View {
     private var privacySection: some View {
         Section("Privacy") {
             Button("Export my data") {
+                exportFile = makeExport()
             }
             .foregroundStyle(.primary)
 
             Button("Delete account", role: .destructive) {
+                showingDeleteConfirm = true
             }
         }
     }
@@ -89,6 +109,57 @@ struct SettingsView: View {
             LabeledContent("Version", value: "1.0")
         }
     }
+
+    /// Builds a GDPR data-export JSON file from the user's loaded data.
+    private func makeExport() -> ExportFile? {
+        var root: [String: Any] = [
+            "exported_at": ISO8601DateFormatter().string(from: Date()),
+            "account": [
+                "email": auth.session?.email ?? "guest",
+                "country": auth.selectedCountry.code,
+            ],
+        ]
+        root["subscriptions"] = store.subscriptions.map { sub in
+            [
+                "merchant": sub.merchantName,
+                "amount_cents": sub.amountCents,
+                "currency": sub.currency,
+                "billing_frequency": sub.billingFrequency.rawValue,
+                "signup_date": ISO8601DateFormatter().string(from: sub.signupDate),
+                "status": sub.status.rawValue,
+            ] as [String: Any]
+        }
+        root["cancellations"] = store.attempts.map { attempt in
+            [
+                "merchant": attempt.merchantName,
+                "method": attempt.method.rawValue,
+                "sent_at": ISO8601DateFormatter().string(from: attempt.sentAt),
+                "outcome": attempt.outcome.rawValue,
+                "legal_clause": attempt.legalClauseCited,
+            ] as [String: Any]
+        }
+        guard let data = try? JSONSerialization.data(
+            withJSONObject: root, options: [.prettyPrinted, .sortedKeys]
+        ) else { return nil }
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("easycancel-data.json")
+        guard (try? data.write(to: url)) != nil else { return nil }
+        return ExportFile(url: url)
+    }
+}
+
+private struct ExportFile: Identifiable {
+    let id = UUID()
+    let url: URL
+}
+
+/// Wraps `UIActivityViewController` so SwiftUI can present the iOS share sheet.
+private struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+    func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
 }
 
 #Preview {

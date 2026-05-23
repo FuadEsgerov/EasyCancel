@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # The real Sources/Services/SupabaseConfig.swift is gitignored (holds the
+      # publishable key). Tests run against the offline mock, so a placeholder
+      # that compiles is enough for CI.
+      - name: Create placeholder Supabase config
+        run: |
+          cat > Sources/Services/SupabaseConfig.swift <<'SWIFT'
+          import Foundation
+          enum SupabaseConfig {
+              static let url = URL(string: "https://example.supabase.co")!
+              static let publishableKey = "ci-placeholder"
+              static let useLiveBackend = false
+          }
+          SWIFT
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build & test
+        run: >
+          xcodebuild test
+          -project EasyCancel.xcodeproj
+          -scheme EasyCancel
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
+          -resultBundlePath TestResults.xcresult

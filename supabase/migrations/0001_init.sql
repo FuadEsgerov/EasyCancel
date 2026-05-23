@@ -132,11 +132,18 @@ create policy "Users view own attempts" on public.cancellation_attempts
   for select using (auth.uid() = user_id);
 create policy "Users insert own attempts" on public.cancellation_attempts
   for insert with check (auth.uid() = user_id);
+create policy "Users delete own attempts" on public.cancellation_attempts
+  for delete to authenticated using (user_id = (select auth.uid()));
 
 create policy "Users view own queue" on public.email_parse_queue
   for select using (auth.uid() = user_id);
+create policy "Users delete own queue" on public.email_parse_queue
+  for delete to authenticated using (user_id = (select auth.uid()));
+
 create policy "Users view own notifications" on public.notifications
   for select using (auth.uid() = user_id);
+create policy "Users delete own notifications" on public.notifications
+  for delete to authenticated using (user_id = (select auth.uid()));
 
 -- ── Indexes ──────────────────────────────────────────────────────────────
 

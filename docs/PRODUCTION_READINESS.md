@@ -8,6 +8,10 @@ launch prerequisites (App Store Connect, edge-function deploy, legal review,
 real-device QA) are still outstanding. Target launch is **19 Jun 2026** (EU
 Directive 2023/2673 deadline).
 
+**Recently completed (2026-05-23):** App Icon added · GDPR Export/Delete wired
+(was no-ops) · Sign-in Terms/Privacy now tappable · CI workflow added · 36 tests
+green · Release build verified.
+
 ---
 
 ## 1. What's done & verified ✅
@@ -58,7 +62,7 @@ Directive 2023/2673 deadline).
 ### Apple / Xcode
 - [ ] Set a real **Apple Developer Team** for signing (`DEVELOPMENT_TEAM` in `project.yml` is unset; Sign in with Apple needs it).
 - [ ] Configure **Sign in with Apple** capability in the Apple Developer portal for the app id.
-- [ ] Add a real **App Icon** (asset catalog slot exists but is empty).
+- [x] App Icon added (green checkmark, `Sources/Resources/Assets.xcassets/AppIcon.appiconset/icon_1024.png`) — replace with final brand art if desired.
 - [ ] Archive a **Release** build and upload via TestFlight.
 
 ### Supabase (dashboard / deploy)
@@ -71,17 +75,17 @@ Directive 2023/2673 deadline).
 ### Legal / Web (compliance-critical for this app)
 - [ ] **Withdrawal-letter templates**: legally reviewed + professionally translated per market (currently English-only by design — see `CancelConfirmationView.letterPreview`).
 - [ ] Publish real **Terms** + **Privacy Policy** at `https://easycancel.app/terms` and `/privacy` (paywall + sign-in reference them).
-- [ ] GDPR data-deletion + export must actually work (Settings buttons are currently no-ops).
+- [x] GDPR **Export my data** (JSON share sheet) + **Delete account** wired (Settings). Delete purges the user's own rows (RLS delete-own policies added) + soft-deletes the profile (`deleted_at`) + signs out. ⚠️ Still TODO: a **service-role edge function / cron purge** to hard-delete the `auth.users` record (client can't). Delete is build-verified + RLS-verified, but not tap-tested against live.
 
 ---
 
 ## 4. Should do before launch ⚠️
 
 - [ ] **Device QA**: run all auth paths (guest, Apple, magic-link tap) + a real sandbox purchase on a physical device.
-- [ ] Make the sign-in "Terms and Privacy Policy" text **tappable links** (currently plain text).
-- [ ] Wire **Export my data** / **Delete account** (Settings) to real backend actions.
+- [x] Sign-in "Terms and Privacy Policy" are now **tappable links** (point at the placeholder URLs — publish the pages).
+- [x] **Export my data** / **Delete account** wired (see §3 Legal/Web for the remaining hard-delete edge function).
+- [x] **CI workflow** added (`.github/workflows/ci.yml`) — runs xcodegen + build + 36 tests (writes a placeholder `SupabaseConfig.swift` since the real one is gitignored).
 - [ ] Decide & implement **push notifications** (cooling-off / renewal reminders — `notifications` table + pg_cron jobs exist).
-- [ ] Add a CI workflow to run the 36 tests on every push.
 
 ---
 

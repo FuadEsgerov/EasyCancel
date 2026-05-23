@@ -43,6 +43,22 @@ struct SupabaseAuthService: AuthService {
         try await client.auth.signOut()
     }
 
+    func deleteAccount() async throws {
+        let userID = try await client.auth.session.user.id.uuidString
+        // Delete in FK-safe order (children before parents), all RLS-scoped to
+        // the signed-in user, then soft-delete the profile and sign out. A
+        // service-role purge job finalizes removal of the auth.users record.
+        try await client.from("notifications").delete().eq("user_id", value: userID).execute()
+        try await client.from("email_parse_queue").delete().eq("user_id", value: userID).execute()
+        try await client.from("cancellation_attempts").delete().eq("user_id", value: userID).execute()
+        try await client.from("user_subscriptions").delete().eq("user_id", value: userID).execute()
+        try await client.from("profiles")
+            .update(["deleted_at": ISO8601DateFormatter().string(from: Date())])
+            .eq("id", value: userID)
+            .execute()
+        try await client.auth.signOut()
+    }
+
     private static func map(_ session: Session) -> AuthSession {
         AuthSession(
             userID: session.user.id,
