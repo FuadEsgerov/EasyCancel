@@ -6,12 +6,20 @@ struct EasyCancelApp: App {
     @State private var auth = AuthStore(service: EasyCancelApp.makeAuthService())
     @State private var storeManager = StoreManager()
 
+    /// UI tests pass `-uiTest` to force the offline mock (empty data, clean
+    /// onboarding) so they never touch the live Supabase backend.
+    private static var isUITest: Bool {
+        ProcessInfo.processInfo.arguments.contains("-uiTest")
+    }
+
     private static func makeSubscriptionService() -> any SubscriptionService {
-        SupabaseConfig.useLiveBackend ? SupabaseSubscriptionService() : MockSubscriptionService()
+        if isUITest { return MockSubscriptionService(subscriptions: []) }
+        return SupabaseConfig.useLiveBackend ? SupabaseSubscriptionService() : MockSubscriptionService()
     }
 
     private static func makeAuthService() -> any AuthService {
-        SupabaseConfig.useLiveBackend ? SupabaseAuthService() : MockAuthService()
+        if isUITest { return MockAuthService() }
+        return SupabaseConfig.useLiveBackend ? SupabaseAuthService() : MockAuthService()
     }
 
     var body: some Scene {

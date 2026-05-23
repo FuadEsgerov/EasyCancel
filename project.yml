@@ -51,6 +51,15 @@ targets:
     dependencies:
       - target: EasyCancel
       - sdk: StoreKitTest.framework
+  EasyCancelUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: EasyCancel
+    settings:
+      base:
+        TEST_TARGET_NAME: EasyCancel
 schemes:
   EasyCancel:
     build:
@@ -63,3 +72,4 @@ schemes:
       config: Debug
       targets:
         - EasyCancelTests
+        - EasyCancelUITests
