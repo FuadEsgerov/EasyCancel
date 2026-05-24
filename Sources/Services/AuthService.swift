@@ -35,6 +35,10 @@ protocol AuthService: Sendable {
 actor MockAuthService: AuthService {
     private var session: AuthSession?
 
+    init(session: AuthSession? = nil) {
+        self.session = session
+    }
+
     func currentSession() async -> AuthSession? { session }
 
     func signInAnonymously() async throws -> AuthSession {

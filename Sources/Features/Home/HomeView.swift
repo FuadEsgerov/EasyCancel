@@ -6,6 +6,7 @@ struct HomeView: View {
     @State private var showingAddSheet = false
     @State private var showingForwardSheet = false
     @State private var showingPaywall = false
+    @State private var showingLimitAlert = false
     @ScaledMetric(relativeTo: .largeTitle) private var spendSize: CGFloat = 36
 
     private var canAdd: Bool {
@@ -13,11 +14,11 @@ struct HomeView: View {
     }
 
     private func startForward() {
-        if canAdd { showingForwardSheet = true } else { showingPaywall = true }
+        if canAdd { showingForwardSheet = true } else { showingLimitAlert = true }
     }
 
     private func startManual() {
-        if canAdd { showingAddSheet = true } else { showingPaywall = true }
+        if canAdd { showingAddSheet = true } else { showingLimitAlert = true }
     }
 
     var body: some View {
@@ -35,21 +36,30 @@ struct HomeView: View {
             .navigationTitle("EasyCancel")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu {
-                        Button {
-                            startForward()
+                    if FeatureFlags.emailForwardingEnabled {
+                        Menu {
+                            Button {
+                                startForward()
+                            } label: {
+                                Label("Forward an email", systemImage: "envelope")
+                            }
+                            Button {
+                                startManual()
+                            } label: {
+                                Label("Enter manually", systemImage: "square.and.pencil")
+                            }
                         } label: {
-                            Label("Forward an email", systemImage: "envelope")
+                            Image(systemName: "plus")
                         }
+                        .accessibilityLabel("Add subscription")
+                    } else {
                         Button {
                             startManual()
                         } label: {
-                            Label("Enter manually", systemImage: "square.and.pencil")
+                            Image(systemName: "plus")
                         }
-                    } label: {
-                        Image(systemName: "plus")
+                        .accessibilityLabel("Add subscription")
                     }
-                    .accessibilityLabel("Add subscription")
                 }
             }
             .navigationDestination(for: Subscription.self) { subscription in
@@ -64,6 +74,12 @@ struct HomeView: View {
             .sheet(isPresented: $showingPaywall) {
                 PaywallView()
             }
+            .alert("Free plan limit reached", isPresented: $showingLimitAlert) {
+                Button("Upgrade to Pro") { showingPaywall = true }
+                Button("Not now", role: .cancel) {}
+            } message: {
+                Text("You're tracking \(FreeTier.maxActiveSubscriptions) subscriptions on the free plan. Upgrade to Pro for unlimited tracking and Family Sharing.")
+            }
         }
     }
 
@@ -71,17 +87,19 @@ struct HomeView: View {
         ContentUnavailableView {
             Label("No subscriptions yet", systemImage: "creditcard")
         } description: {
-            Text("Forward a confirmation email or add one manually to start tracking cooling-off deadlines.")
+            Text("Add your first subscription to start tracking cooling-off deadlines.")
         } actions: {
-            Button("Forward an email") {
-                startForward()
-            }
-            .buttonStyle(.borderedProminent)
-
             Button("Enter manually") {
                 startManual()
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.borderedProminent)
+
+            if FeatureFlags.emailForwardingEnabled {
+                Button("Forward an email") {
+                    startForward()
+                }
+                .buttonStyle(.bordered)
+            }
         }
     }
 
@@ -98,6 +116,7 @@ struct HomeView: View {
                     NavigationLink(value: subscription) {
                         SubscriptionRow(subscription: subscription)
                     }
+                    .accessibilityIdentifier(subscription.merchantName)
                 }
             }
         }

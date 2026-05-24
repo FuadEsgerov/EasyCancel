@@ -19,9 +19,10 @@ final class AuthStore {
     private(set) var magicLinkSentTo: String?
 
     /// Domain users forward subscription emails to (spec §F3.1).
-    static let forwardingDomain = "inbox.easycancel.app"
+    /// Must match the inbound domain configured in Resend + DNS MX records.
+    static let forwardingDomain = "inbox.vincli.com"
 
-    /// The user's unique inbound address, e.g. `guest-1a2b@inbox.easycancel.app`.
+    /// The user's unique inbound address, e.g. `guest-1a2b@inbox.vincli.com`.
     /// Nil until the session reports a local handle.
     var forwardingAddress: String? {
         session?.forwardingAddressLocal.map { "\($0)@\(Self.forwardingDomain)" }

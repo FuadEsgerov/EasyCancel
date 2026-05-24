@@ -36,7 +36,7 @@ the Svix signature instead.
 
 ### 3. Wire up Resend inbound
 
-1. Add and verify the domain `inbox.easycancel.app` for **inbound** in Resend (MX records).
+1. Add and verify the domain `inbox.vincli.com` for **inbound** in Resend (MX records).
 2. Add an inbound webhook → the function URL:
    `https://jinzwwsbuwvemwmcqfqw.supabase.co/functions/v1/parse-email`
 3. Copy Resend's signing secret into `RESEND_WEBHOOK_SECRET` (step 1).
@@ -44,7 +44,7 @@ the Svix signature instead.
 ## How users address it
 
 Each profile has `forwarding_address_local` (set by the `handle_new_user` trigger).
-The full address is `{forwarding_address_local}@inbox.easycancel.app`, shown in the
+The full address is `{forwarding_address_local}@inbox.vincli.com`, shown in the
 app's "Forward an email" screen.
 
 ## Local check
@@ -58,7 +58,7 @@ Sample payload (Resend inbound shape):
 
 ```json
 { "type": "inbound.email.received",
-  "data": { "from": "Netflix <info@netflix.com>", "to": ["jane-1a2b@inbox.easycancel.app"],
+  "data": { "from": "Netflix <info@netflix.com>", "to": ["jane-1a2b@inbox.vincli.com"],
             "subject": "Your Netflix membership", "text": "Your plan is €15,99/month starting 2026-05-20." } }
 ```
 

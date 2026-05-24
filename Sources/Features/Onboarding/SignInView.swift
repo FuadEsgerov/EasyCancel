@@ -54,7 +54,7 @@ struct SignInView: View {
 
             Spacer()
 
-            Text("By continuing you agree to our [Terms](https://easycancel.app/terms) and [Privacy Policy](https://easycancel.app/privacy).")
+            Text("By continuing you agree to our [Terms](https://vincli.com/docs/easyterms.pdf) and [Privacy Policy](https://vincli.com/docs/easyprivacy.pdf).")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
                 .tint(.secondary)

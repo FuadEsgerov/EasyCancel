@@ -101,7 +101,7 @@ struct CancelConfirmationView: View {
     }
 
     private var letterSection: some View {
-        Section("Withdrawal letter preview") {
+        Section {
             ScrollView {
                 Text(letterPreview)
                     .font(.system(.footnote, design: .monospaced))
@@ -110,11 +110,22 @@ struct CancelConfirmationView: View {
                     .padding(.vertical, 4)
             }
             .frame(maxHeight: 220)
+        } header: {
+            Text("Withdrawal letter preview")
+        } footer: {
+            Text("This is a template, not legal advice. The 14-day right of withdrawal may not apply to every subscription — for example digital services you agreed to start using immediately.")
         }
     }
 
     private var actionsSection: some View {
         Section {
+            ShareLink(item: letterPreview) {
+                Label("Send cancellation letter", systemImage: "square.and.arrow.up")
+                    .frame(maxWidth: .infinity)
+                    .font(.body.weight(.semibold))
+            }
+            .listRowBackground(Color.accentColor.opacity(0.12))
+
             Button {
                 isSending = true
                 Task {
@@ -128,7 +139,7 @@ struct CancelConfirmationView: View {
                         ProgressView()
                             .padding(.trailing, 4)
                     }
-                    Text(isSending ? "Sending…" : "Send cancellation")
+                    Text(isSending ? "Saving…" : "Mark as cancelled")
                         .frame(maxWidth: .infinity)
                         .font(.body.weight(.semibold))
                 }
@@ -143,6 +154,8 @@ struct CancelConfirmationView: View {
                     .frame(maxWidth: .infinity)
             }
             .foregroundStyle(.secondary)
+        } footer: {
+            Text("Share the letter to send it to the merchant (e.g. by email), then mark the subscription as cancelled to keep a record in your Vault.")
         }
     }
 

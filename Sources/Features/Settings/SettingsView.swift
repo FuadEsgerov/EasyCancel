@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(SubscriptionStore.self) private var store
     @Environment(AuthStore.self) private var auth
     @Environment(StoreManager.self) private var storeManager
+    @Environment(NotificationService.self) private var notifications
     @State private var showingPaywall = false
     @State private var exportFile: ExportFile?
     @State private var showingDeleteConfirm = false
@@ -16,6 +17,7 @@ struct SettingsView: View {
             Form {
                 accountSection
                 subscriptionSection
+                remindersSection
                 privacySection
                 aboutSection
                 signOutSection
@@ -39,6 +41,17 @@ struct SettingsView: View {
             } message: {
                 Text("This permanently deletes your account and all your data. This can't be undone.")
             }
+        }
+        .alert(
+            "Something went wrong",
+            isPresented: Binding(
+                get: { auth.errorMessage != nil },
+                set: { if !$0 { auth.errorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(auth.errorMessage ?? "")
         }
     }
 
@@ -88,6 +101,19 @@ struct SettingsView: View {
                 Task { await storeManager.restore() }
             }
             .foregroundStyle(.primary)
+        }
+    }
+
+    private var remindersSection: some View {
+        @Bindable var notifications = notifications
+        return Section("Reminders") {
+            Toggle("Subscription reminders", isOn: $notifications.remindersEnabled)
+                .onChange(of: notifications.remindersEnabled) { _, on in
+                    if on { Task { await notifications.reschedule(for: store.activeSubscriptions) } }
+                }
+            Text("Get notified before each cooling-off deadline and renewal.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 

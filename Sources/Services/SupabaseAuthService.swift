@@ -45,17 +45,23 @@ struct SupabaseAuthService: AuthService {
 
     func deleteAccount() async throws {
         let userID = try await client.auth.session.user.id.uuidString
-        // Delete in FK-safe order (children before parents), all RLS-scoped to
-        // the signed-in user, then soft-delete the profile and sign out. A
-        // service-role purge job finalizes removal of the auth.users record.
-        try await client.from("notifications").delete().eq("user_id", value: userID).execute()
-        try await client.from("email_parse_queue").delete().eq("user_id", value: userID).execute()
-        try await client.from("cancellation_attempts").delete().eq("user_id", value: userID).execute()
-        try await client.from("user_subscriptions").delete().eq("user_id", value: userID).execute()
-        try await client.from("profiles")
-            .update(["deleted_at": ISO8601DateFormatter().string(from: Date())])
-            .eq("id", value: userID)
-            .execute()
+        // Preferred path: the `delete-account` edge function does full GDPR
+        // erasure (incl. the auth.users record, which the client can't touch).
+        // If it isn't deployed/reachable, fall back to deleting the user's data
+        // and soft-deleting the profile so the account is still removed and the
+        // user signed out. (Deploy the function to get true auth.users erasure.)
+        do {
+            try await client.functions.invoke("delete-account")
+        } catch {
+            try await client.from("notifications").delete().eq("user_id", value: userID).execute()
+            try await client.from("email_parse_queue").delete().eq("user_id", value: userID).execute()
+            try await client.from("cancellation_attempts").delete().eq("user_id", value: userID).execute()
+            try await client.from("user_subscriptions").delete().eq("user_id", value: userID).execute()
+            try await client.from("profiles")
+                .update(["deleted_at": ISO8601DateFormatter().string(from: Date())])
+                .eq("id", value: userID)
+                .execute()
+        }
         try await client.auth.signOut()
     }
 

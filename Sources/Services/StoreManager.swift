@@ -4,8 +4,8 @@ import StoreKit
 /// Identifiers for the EasyCancel Pro subscription. Mirrors `Configuration.storekit`
 /// (and, in production, App Store Connect).
 enum ProProduct {
-    static let monthly = "app.easycancel.pro.monthly"
-    static let yearly = "app.easycancel.pro.yearly"
+    static let monthly = "app.easycancel.pro.month"
+    static let yearly = "app.easycancel.pro.year"
     static let all = [monthly, yearly]
     static let groupID = "21500001"
 }

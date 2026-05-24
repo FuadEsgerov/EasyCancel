@@ -36,7 +36,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "app.easycancel.pro.monthly",
+          "productID" : "app.easycancel.pro.month",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Pro Monthly",
           "subscriptionGroupID" : "21500001",
@@ -57,7 +57,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "app.easycancel.pro.yearly",
+          "productID" : "app.easycancel.pro.year",
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Pro Yearly",
           "subscriptionGroupID" : "21500001",

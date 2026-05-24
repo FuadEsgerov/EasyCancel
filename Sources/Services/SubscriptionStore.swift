@@ -14,6 +14,10 @@ final class SubscriptionStore {
 
     private let service: any SubscriptionService
 
+    /// Called after every load with the current active subscriptions, so the app
+    /// can (re)schedule reminders. Set once at the app root.
+    var onLoaded: (([Subscription]) -> Void)?
+
     init(service: any SubscriptionService) {
         self.service = service
     }
@@ -27,6 +31,7 @@ final class SubscriptionStore {
         } catch {
             errorMessage = error.localizedDescription
         }
+        onLoaded?(activeSubscriptions)
     }
 
     func add(_ subscription: Subscription) async {

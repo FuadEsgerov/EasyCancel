@@ -71,4 +71,23 @@ final class EasyCancelUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["EasyCancel Pro"].waitForExistence(timeout: 10),
                       "Paywall should present")
     }
+
+    /// A free user at the cap taps "+" → sees the limit alert → "Upgrade to Pro"
+    /// opens the paywall. Uses `-screenshots` (seeded mock = 4 active subs > cap).
+    func testFreeLimitAlertOpensPaywall() {
+        let app = XCUIApplication()
+        app.launchArguments += ["-screenshots"]
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["Active monthly spend"].waitForExistence(timeout: 20),
+                      "Seeded Home should appear")
+        app.buttons["Add subscription"].tap()
+
+        XCTAssertTrue(app.staticTexts["Free plan limit reached"].waitForExistence(timeout: 5),
+                      "Limit alert should appear at the free cap")
+        app.buttons["Upgrade to Pro"].tap()
+
+        XCTAssertTrue(app.staticTexts["EasyCancel Pro"].waitForExistence(timeout: 10),
+                      "Paywall should open from the limit alert")
+    }
 }

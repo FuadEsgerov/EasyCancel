@@ -55,7 +55,7 @@ green · Release build verified.
 
 ### App Store Connect
 - [ ] Create the app record (bundle id `app.easycancel`).
-- [ ] Create **in-app subscription products**: `app.easycancel.pro.monthly` (€2.99, 7-day free trial) and `app.easycancel.pro.yearly` (€19.99) in subscription group "EasyCancel Pro". _(`Configuration.storekit` is local-test only — real purchases fail without these.)_
+- [ ] Create **auto-renewable subscriptions** (Monetization → Subscriptions, NOT In-App Purchases): `app.easycancel.pro.month` (€2.99, 7-day free trial) and `app.easycancel.pro.year` (€19.99) in subscription group "EasyCancel Pro". _(IDs changed from `.monthly`/`.yearly` 2026-05-23 — `.pro.monthly` was burned by a mistaken IAP that had to be deleted. `Configuration.storekit` is local-test only — real purchases fail without these.)_
 - [ ] Fill the **privacy nutrition labels** (must match `PrivacyInfo.xcprivacy` + actual data: email, subscription data).
 - [ ] Provide **demo guest** note in App Review Information (guest sign-in needs no creds — state that).
 
@@ -74,7 +74,7 @@ green · Release build verified.
 
 ### Legal / Web (compliance-critical for this app)
 - [ ] **Withdrawal-letter templates**: legally reviewed + professionally translated per market (currently English-only by design — see `CancelConfirmationView.letterPreview`).
-- [ ] Publish real **Terms** + **Privacy Policy** at `https://easycancel.app/terms` and `/privacy` (paywall + sign-in reference them).
+- [x] **Terms + Privacy + Support published** (2026-05-23) as PDFs at `https://vincli.com/docs/easyterms.pdf`, `easyprivacy.pdf`, `easysupport.pdf` (HTTP 200, verified). In-app paywall + sign-in links and the metadata doc updated to these URLs. _Legal review still recommended._
 - [x] GDPR **Export my data** (JSON share sheet) + **Delete account** wired (Settings). Delete purges the user's own rows (RLS delete-own policies added) + soft-deletes the profile (`deleted_at`) + signs out. ⚠️ Still TODO: a **service-role edge function / cron purge** to hard-delete the `auth.users` record (client can't). Delete is build-verified + RLS-verified, but not tap-tested against live.
 
 ---
@@ -85,7 +85,7 @@ green · Release build verified.
 - [x] Sign-in "Terms and Privacy Policy" are now **tappable links** (point at the placeholder URLs — publish the pages).
 - [x] **Export my data** / **Delete account** wired (see §3 Legal/Web for the remaining hard-delete edge function).
 - [x] **CI workflow** added (`.github/workflows/ci.yml`) — runs xcodegen + build + 36 tests (writes a placeholder `SupabaseConfig.swift` since the real one is gitignored).
-- [ ] Decide & implement **push notifications** (cooling-off / renewal reminders — `notifications` table + pg_cron jobs exist).
+- [x] **Local reminders implemented** (2026-05-23): `NotificationService` + pure `NotificationPlanner` schedule on-device alerts 2 days before each cooling-off deadline and renewal; Settings → Reminders toggle; requests permission when there's something to remind about; skipped in `-uiTest`/`-screenshots`. 5 unit tests. _Server push (APNs via the `notifications` table + pg_cron) still optional/future — only needed for server-triggered reminders (e.g. email-detected subs)._
 
 ---
 
