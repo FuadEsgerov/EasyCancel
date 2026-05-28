@@ -8,8 +8,19 @@ struct SignInView: View {
     @State private var currentNonce: String?
 
     var body: some View {
+        // Scrollable so the screen stays usable at large Dynamic Type sizes,
+        // while `minHeight` keeps the content vertically centered at normal sizes.
+        GeometryReader { proxy in
+            ScrollView {
+                content
+                    .frame(minHeight: proxy.size.height)
+            }
+        }
+    }
+
+    private var content: some View {
         VStack(spacing: 0) {
-            Spacer()
+            Spacer(minLength: 24)
 
             VStack(spacing: 8) {
                 Text("Create your account")
@@ -21,7 +32,7 @@ struct SignInView: View {
             }
             .padding(.horizontal, 32)
 
-            Spacer()
+            Spacer(minLength: 32)
 
             VStack(spacing: 16) {
                 SignInWithAppleButton(.signIn) { request in
@@ -52,7 +63,7 @@ struct SignInView: View {
             }
             .padding(.horizontal, 24)
 
-            Spacer()
+            Spacer(minLength: 32)
 
             Text("By continuing you agree to our [Terms](https://vincli.com/docs/easyterms.pdf) and [Privacy Policy](https://vincli.com/docs/easyprivacy.pdf).")
                 .font(.caption2)

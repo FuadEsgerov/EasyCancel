@@ -5,16 +5,25 @@ import SwiftUI
 enum AmountParser {
     static func cents(from text: String, decimalSeparators: [Character] = [".", ","]) -> Int? {
         let trimmed = text.trimmingCharacters(in: .whitespaces)
-        guard !trimmed.isEmpty else { return nil }
+        // Manual entry only: digits and separators. Rejects letters, negatives, currency symbols.
+        guard !trimmed.isEmpty,
+              trimmed.allSatisfy({ $0.isNumber || decimalSeparators.contains($0) }) else { return nil }
 
-        var normalized = trimmed
-        for separator in decimalSeparators {
-            normalized = normalized.replacingOccurrences(of: String(separator), with: ".")
+        // The decimal separator is the last "." or "," followed by 1–2 digits; any earlier
+        // separators are thousands grouping, so "1.234,56" and "1,234.56" both parse correctly.
+        let lastSep = decimalSeparators.compactMap { trimmed.lastIndex(of: $0) }.max()
+        var integerPart = trimmed
+        var fraction = 0
+        if let sep = lastSep {
+            let after = trimmed[trimmed.index(after: sep)...]
+            if (1...2).contains(after.count), after.allSatisfy(\.isNumber) {
+                integerPart = String(trimmed[..<sep])
+                fraction = Int(after.count == 1 ? "\(after)0" : String(after)) ?? 0
+            }
         }
-
-        guard let value = Double(normalized), value > 0 else { return nil }
-
-        let cents = Int((value * 100).rounded())
+        let digits = integerPart.filter(\.isNumber)
+        guard !digits.isEmpty, let intVal = Int(digits) else { return nil }
+        let cents = intVal * 100 + fraction
         return cents > 0 ? cents : nil
     }
 }

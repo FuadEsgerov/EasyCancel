@@ -59,6 +59,7 @@ struct SupabaseSubscriptionService: SubscriptionService {
             .from("user_subscriptions")
             .select("id,custom_merchant_name,amount_cents,currency,billing_frequency,signup_date,next_renewal_date,status")
             .eq("id", value: subscriptionID.uuidString)
+            .eq("user_id", value: userID.uuidString)
             .limit(1)
             .execute()
             .value
@@ -68,9 +69,10 @@ struct SupabaseSubscriptionService: SubscriptionService {
             .from("user_subscriptions")
             .update(["status": "cancelled"])
             .eq("id", value: subscriptionID.uuidString)
+            .eq("user_id", value: userID.uuidString)
             .execute()
 
-        let citation = CountryRules.rules(for: "UK").legalCitation
+        let citation = CountryRules.rules(for: await currentCountryCode()).legalCitation
         let payload = AttemptInsert(
             subscription_id: subscriptionID.uuidString,
             user_id: userID.uuidString,
@@ -95,6 +97,20 @@ struct SupabaseSubscriptionService: SubscriptionService {
         } catch {
             throw SupabaseServiceError.notAuthenticated
         }
+    }
+
+    /// The signed-in user's country code (from their RLS-scoped profile), used to
+    /// cite the correct withdrawal clause. Falls back to UK if it can't be read.
+    private func currentCountryCode() async -> String {
+        struct CountryRow: Decodable { let country_code: String? }
+        let row: CountryRow? = try? await client
+            .from("profiles")
+            .select("country_code")
+            .limit(1)
+            .single()
+            .execute()
+            .value
+        return row?.country_code ?? "UK"
     }
 
     static func dateOnlyString(_ date: Date) -> String {

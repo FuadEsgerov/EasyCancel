@@ -33,7 +33,12 @@ Deno.serve(async (req) => {
       });
     }
   }
-  await admin.from("profiles").delete().eq("id", uid);
+  const { error: profileError } = await admin.from("profiles").delete().eq("id", uid);
+  if (profileError) {
+    return new Response(JSON.stringify({ error: `Failed clearing profiles: ${profileError.message}` }), {
+      status: 500, headers: { "content-type": "application/json" },
+    });
+  }
 
   // Hard-delete the auth.users record — completes GDPR erasure.
   const { error: deleteError } = await admin.auth.admin.deleteUser(uid);

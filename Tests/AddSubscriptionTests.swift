@@ -33,4 +33,20 @@ struct AddSubscriptionTests {
     @Test func negativeValueReturnsNil() {
         #expect(AmountParser.cents(from: "-5.00") == nil)
     }
+
+    @Test func euGroupedAmountParsesToCents() {
+        #expect(AmountParser.cents(from: "1.234,56") == 123456)
+    }
+
+    @Test func usGroupedAmountParsesToCents() {
+        #expect(AmountParser.cents(from: "1,234.56") == 123456)
+    }
+
+    @Test func singleDecimalDigitPadsToCents() {
+        #expect(AmountParser.cents(from: "9.5") == 950)
+    }
+
+    @Test func currencySymbolReturnsNil() {
+        #expect(AmountParser.cents(from: "€12,99") == nil)
+    }
 }

@@ -91,7 +91,12 @@ Deno.serve(async (req) => {
 
 function verifySignature(req: Request, body: string): boolean {
   const secret = Deno.env.get("RESEND_WEBHOOK_SECRET");
-  if (!secret) return true; // dev/local: skip when unset
+  if (!secret) {
+    // Fail closed in production: an unsigned request must never be trusted, or
+    // anyone could POST forged emails for a known handle. Set
+    // ALLOW_UNSIGNED_WEBHOOKS=true ONLY for local development.
+    return Deno.env.get("ALLOW_UNSIGNED_WEBHOOKS") === "true";
+  }
   try {
     new Webhook(secret).verify(body, {
       "svix-id": req.headers.get("svix-id") ?? "",

@@ -142,7 +142,7 @@ Create a **subscription group**, then two auto-renewable subscriptions.
 | Field | Value |
 |-------|-------|
 | Reference Name | Pro Yearly |
-| Product ID | `![alt text](image.png)` |
+| Product ID | `app.easycancel.pro.year` |
 | Duration | 1 Year |
 | Price | €19.99 (pick the matching tier) |
 | Family Sharing | ON |
