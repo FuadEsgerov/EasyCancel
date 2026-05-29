@@ -10,28 +10,56 @@ final class SubscriptionStore {
     private(set) var subscriptions: [Subscription] = []
     private(set) var attempts: [CancellationAttempt] = []
     private(set) var isLoading = false
+    /// True when the last refresh failed but we're showing cached data instead.
+    private(set) var isShowingCachedData = false
     var errorMessage: String?
 
     private let service: any SubscriptionService
+    private let cache: SubscriptionCache?
 
     /// Called after every load with the current active subscriptions, so the app
     /// can (re)schedule reminders. Set once at the app root.
     var onLoaded: (([Subscription]) -> Void)?
 
-    init(service: any SubscriptionService) {
+    init(service: any SubscriptionService, cache: SubscriptionCache? = nil) {
         self.service = service
+        self.cache = cache
     }
 
+    /// Offline-first load: paint cached data immediately, then refresh from the
+    /// backend. On a network failure we keep the cached data rather than blanking
+    /// the list, and only surface an error if there's nothing to show.
     func load() async {
         isLoading = true
         defer { isLoading = false }
+
+        if subscriptions.isEmpty, let cache {
+            let cached = await cache.load()
+            if !cached.isEmpty { subscriptions = cached }
+        }
+
         do {
-            subscriptions = try await service.fetchSubscriptions()
+            let fetched = try await service.fetchSubscriptions()
+            subscriptions = fetched
             attempts = try await service.fetchAttempts()
+            errorMessage = nil
+            isShowingCachedData = false
+            if let cache { await cache.replace(with: fetched) }
         } catch {
-            errorMessage = error.localizedDescription
+            // Keep whatever we already have (cache or prior fetch); only error
+            // out when we have nothing at all to display.
+            if subscriptions.isEmpty {
+                errorMessage = error.localizedDescription
+            } else {
+                isShowingCachedData = true
+            }
         }
         onLoaded?(activeSubscriptions)
+    }
+
+    /// Drops the local cache (call on sign-out / account deletion).
+    func clearCache() async {
+        await cache?.clear()
     }
 
     func add(_ subscription: Subscription) async {

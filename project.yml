@@ -12,7 +12,7 @@ settings:
     SWIFT_STRICT_CONCURRENCY: complete
     GENERATE_INFOPLIST_FILE: YES
     SWIFT_EMIT_LOC_STRINGS: YES
-    MARKETING_VERSION: "1.0"
+    MARKETING_VERSION: "1.1"
     CURRENT_PROJECT_VERSION: "1"
     DEVELOPMENT_TEAM: 52N9GMM7Q6
 packages:
@@ -27,14 +27,19 @@ targets:
       - path: Sources
         excludes:
           - "Resources/Info.plist"
+      - path: Shared
     dependencies:
       - package: Supabase
         product: Supabase
+      - target: EasyCancelWidget
     entitlements:
       path: Sources/Resources/EasyCancel.entitlements
       properties:
         com.apple.developer.applesignin:
           - Default
+        com.apple.security.application-groups:
+          - group.com.vincli.easycancel
+        aps-environment: development
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.vincli.easycancel
@@ -62,6 +67,19 @@ targets:
     settings:
       base:
         TEST_TARGET_NAME: EasyCancel
+  EasyCancelWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - Widget
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vincli.easycancel.widget
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Widget/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Widget/EasyCancelWidget.entitlements
+        SWIFT_EMIT_LOC_STRINGS: YES
 schemes:
   EasyCancel:
     build:

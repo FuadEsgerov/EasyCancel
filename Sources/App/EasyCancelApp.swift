@@ -2,7 +2,11 @@ import SwiftUI
 
 @main
 struct EasyCancelApp: App {
-    @State private var store = SubscriptionStore(service: EasyCancelApp.makeSubscriptionService())
+    @UIApplicationDelegateAdaptor(PushAppDelegate.self) private var appDelegate
+    @State private var store = SubscriptionStore(
+        service: EasyCancelApp.makeSubscriptionService(),
+        cache: EasyCancelApp.makeCache()
+    )
     @State private var auth = AuthStore(service: EasyCancelApp.makeAuthService())
     @State private var storeManager = StoreManager()
     @State private var notifications = NotificationService()
@@ -23,6 +27,13 @@ struct EasyCancelApp: App {
         if isUITest { return MockSubscriptionService(subscriptions: []) }
         if isScreenshots { return MockSubscriptionService() }
         return SupabaseConfig.useLiveBackend ? SupabaseSubscriptionService() : MockSubscriptionService()
+    }
+
+    /// Offline cache for the subscription list. Skipped for UI tests/screenshots
+    /// so a prior run's on-disk data can't leak into a deterministic fixture.
+    private static func makeCache() -> SubscriptionCache? {
+        guard !isUITest && !isScreenshots else { return nil }
+        return SubscriptionCache.makeDefault()
     }
 
     private static func makeAuthService() -> any AuthService {
@@ -47,8 +58,13 @@ struct EasyCancelApp: App {
                     if !Self.isUITest && !Self.isScreenshots {
                         store.onLoaded = { subs in
                             Task { await notifications.reschedule(for: subs) }
+                            WidgetBridge.update(with: subs)
+                            LiveActivityController.sync(with: subs)
                         }
                         await notifications.reschedule(for: store.activeSubscriptions)
+                        // Register for server-driven push once signed in (the
+                        // token upload is gated on the live backend internally).
+                        if auth.phase == .signedIn { PushService.shared.register() }
                     }
                     await storeManager.start()
                 }

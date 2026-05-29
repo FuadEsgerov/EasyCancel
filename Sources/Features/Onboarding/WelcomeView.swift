@@ -31,7 +31,9 @@ struct WelcomeView: View {
                         ValueBullet(
                             icon: "envelope.badge",
                             title: "Track every subscription",
-                            detail: "Forward a confirmation email or add it manually."
+                            detail: FeatureFlags.emailForwardingEnabled
+                                ? "Forward a confirmation email or add it manually."
+                                : "Add a subscription in seconds."
                         )
                         ValueBullet(
                             icon: "clock.badge.checkmark",

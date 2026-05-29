@@ -1,6 +1,6 @@
 // parse-email — inbound subscription-confirmation email parser (spec §10.1).
 //
-// Trigger: webhook from Resend inbound on `inbox.easycancel.app`.
+// Trigger: webhook from Resend inbound on `inbox.vincli.com`.
 // Flow: verify signature → find user by forwarding handle → heuristic parse →
 // Mistral fallback (confidence < 0.7) → insert subscription → log queue row.
 //
@@ -11,7 +11,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { Webhook } from "npm:svix@1";
 
-const FORWARDING_DOMAIN = "inbox.easycancel.app";
+// Must match `AuthStore.forwardingDomain` in the iOS app.
+const FORWARDING_DOMAIN = "inbox.vincli.com";
 const REVIEW_THRESHOLD = 0.7;
 const INSERT_THRESHOLD = 0.5;
 
@@ -130,8 +131,10 @@ function stripHtml(html: string): string {
 }
 
 function recipientHandle(addresses: string[]): string | null {
+  const domain = FORWARDING_DOMAIN.replace(/\./g, "\\.");
+  const re = new RegExp(`([a-z0-9._-]+)@${domain}`);
   for (const a of addresses) {
-    const m = a.toLowerCase().match(/([a-z0-9._-]+)@inbox\.easycancel\.app/);
+    const m = a.toLowerCase().match(re);
     if (m) return m[1];
   }
   return null;

@@ -35,7 +35,10 @@ struct SettingsView: View {
                 titleVisibility: .visible
             ) {
                 Button("Delete account", role: .destructive) {
-                    Task { await auth.deleteAccount() }
+                    Task {
+                        await auth.deleteAccount()
+                        await store.clearCache()
+                    }
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
@@ -66,7 +69,10 @@ struct SettingsView: View {
     private var signOutSection: some View {
         Section {
             Button("Sign out", role: .destructive) {
-                Task { await auth.signOut() }
+                Task {
+                    await auth.signOut()
+                    await store.clearCache()
+                }
             }
         }
     }
@@ -132,8 +138,16 @@ struct SettingsView: View {
 
     private var aboutSection: some View {
         Section("About") {
-            LabeledContent("Version", value: "1.0")
+            LabeledContent("Version", value: Self.appVersion)
         }
+    }
+
+    /// Marketing version + build from the bundle, e.g. "1.1 (1)".
+    private static var appVersion: String {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "—"
+        let build = info?["CFBundleVersion"] as? String ?? "—"
+        return "\(version) (\(build))"
     }
 
     /// Builds a GDPR data-export JSON file from the user's loaded data.
