@@ -82,16 +82,21 @@
     padding:11px 18px;border-radius:12px;border:0;cursor:pointer}
   .btn:hover{background:var(--green-dk);text-decoration:none}
   .btn.ghost{background:var(--soft);color:var(--ink)}
-  /* App Store badge */
-  .btn-appstore{display:inline-flex;align-items:center;gap:10px;background:#000;color:#fff;
+  /* App Store badge — a.btn-appstore wins over `.nav a` colour rule */
+  a.btn-appstore{display:inline-flex;align-items:center;gap:10px;background:#000;color:#fff;
     padding:9px 18px;border-radius:12px;line-height:1}
-  .btn-appstore:hover{background:#1a1a1a;text-decoration:none}
-  .btn-appstore svg{width:22px;height:22px;flex:0 0 auto}
-  .btn-appstore .as-lab{display:flex;flex-direction:column;align-items:flex-start;line-height:1.06}
+  a.btn-appstore:hover{background:#1a1a1a;text-decoration:none}
+  .btn-appstore svg{width:22px;height:22px;flex:0 0 auto;fill:currentColor}
+  .btn-appstore .as-lab{display:flex;flex-direction:column;align-items:flex-start;line-height:1.08}
   .btn-appstore .as-lab small{font-size:11px;font-weight:600;opacity:.85}
   .btn-appstore .as-lab b{font-size:18px;font-weight:700;letter-spacing:-.01em}
-  .band .btn-appstore{background:#fff;color:#000}
-  .band .btn-appstore:hover{background:#eafaf2}
+  /* compact in the sticky nav */
+  .nav a.btn-appstore{padding:7px 14px;gap:8px}
+  .nav .btn-appstore svg{width:18px;height:18px}
+  .nav .btn-appstore .as-lab small{font-size:9px}
+  .nav .btn-appstore .as-lab b{font-size:15px}
+  .band a.btn-appstore{background:#fff;color:#000}
+  .band a.btn-appstore:hover{background:#eafaf2}
 
   /* hero */
   .hero{background:linear-gradient(165deg,#eafaf2 0%,#ffffff 60%);padding:72px 0 40px}
