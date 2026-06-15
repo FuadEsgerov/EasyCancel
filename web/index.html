@@ -82,6 +82,16 @@
     padding:11px 18px;border-radius:12px;border:0;cursor:pointer}
   .btn:hover{background:var(--green-dk);text-decoration:none}
   .btn.ghost{background:var(--soft);color:var(--ink)}
+  /* App Store badge */
+  .btn-appstore{display:inline-flex;align-items:center;gap:10px;background:#000;color:#fff;
+    padding:9px 18px;border-radius:12px;line-height:1}
+  .btn-appstore:hover{background:#1a1a1a;text-decoration:none}
+  .btn-appstore svg{width:22px;height:22px;flex:0 0 auto}
+  .btn-appstore .as-lab{display:flex;flex-direction:column;align-items:flex-start;line-height:1.06}
+  .btn-appstore .as-lab small{font-size:11px;font-weight:600;opacity:.85}
+  .btn-appstore .as-lab b{font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .band .btn-appstore{background:#fff;color:#000}
+  .band .btn-appstore:hover{background:#eafaf2}
 
   /* hero */
   .hero{background:linear-gradient(165deg,#eafaf2 0%,#ffffff 60%);padding:72px 0 40px}
@@ -137,14 +147,6 @@
   .band p{opacity:.92;font-size:18px;margin:12px auto 26px;max-width:46ch}
   .band .btn{background:#fff;color:var(--green-dk)}
   .band .btn:hover{background:#eafaf2}
-  .waitlist{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:480px;margin:0 auto}
-  .waitlist .wl-email{flex:1 1 240px;min-width:0;background:#fff;color:var(--ink);
-    border:0;border-radius:12px;padding:11px 16px;font:inherit;font-size:16px}
-  .waitlist .wl-email:focus{outline:3px solid rgba(255,255,255,.55)}
-  .waitlist .btn{flex:0 0 auto}
-  .hp{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
-    clip:rect(0 0 0 0);white-space:nowrap;border:0}
-  .wl-msg{margin:18px auto 0;max-width:46ch;font-size:17px;font-weight:600;opacity:.96}
 
   /* footer */
   footer{padding:48px 0 64px;color:var(--muted);font-size:14.5px}
@@ -174,7 +176,10 @@
     <a class="hide-sm" href="#pricing">Pricing</a>
     <a class="hide-sm" href="guides/">Guides</a>
     <a class="hide-sm" href="support.html">Support</a>
-    <a class="btn js-waitlist" href="#get">Join waitlist</a>
+    <a class="btn-appstore js-appstore" href="https://apps.apple.com/app/id6772546181" aria-label="Download EasyCancel on the App Store">
+      <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM256.6 93.2c30.1-35.7 27.4-68.2 26.5-79.9-26.6 1.5-57.4 18.1-74.9 38.5-19.3 21.9-30.6 49-28.2 79.3 28.8 2.2 55.1-12.6 76.6-37.9z"/></svg>
+      <span class="as-lab"><small>Download on the</small><b>App Store</b></span>
+    </a>
   </div>
 </header>
 
@@ -184,7 +189,10 @@
       <h1>Cancel subscriptions before they cancel your budget.</h1>
       <p class="lead">EasyCancel tracks every subscription, watches the EU/UK 14-day cooling-off deadline, and helps you cancel the right way — on time, with a GDPR-ready letter.</p>
       <div class="cta-row">
-        <a class="btn js-waitlist" href="#get">Join the waitlist</a>
+        <a class="btn-appstore js-appstore" href="https://apps.apple.com/app/id6772546181" aria-label="Download EasyCancel on the App Store">
+          <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM256.6 93.2c30.1-35.7 27.4-68.2 26.5-79.9-26.6 1.5-57.4 18.1-74.9 38.5-19.3 21.9-30.6 49-28.2 79.3 28.8 2.2 55.1-12.6 76.6-37.9z"/></svg>
+          <span class="as-lab"><small>Download on the</small><b>App Store</b></span>
+        </a>
         <a class="btn ghost" href="#features">See how it works</a>
       </div>
       <div class="trust">
@@ -282,7 +290,10 @@
           <li>Family Sharing</li>
           <li>Everything in Free</li>
         </ul>
-        <div style="margin-top:18px"><a class="btn js-waitlist" href="#get">Join the waitlist</a></div>
+        <div style="margin-top:18px"><a class="btn-appstore js-appstore" href="https://apps.apple.com/app/id6772546181" aria-label="Download EasyCancel on the App Store">
+          <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM256.6 93.2c30.1-35.7 27.4-68.2 26.5-79.9-26.6 1.5-57.4 18.1-74.9 38.5-19.3 21.9-30.6 49-28.2 79.3 28.8 2.2 55.1-12.6 76.6-37.9z"/></svg>
+          <span class="as-lab"><small>Download on the</small><b>App Store</b></span>
+        </a></div>
       </div>
     </div>
   </div>
@@ -291,14 +302,13 @@
 <section id="get">
   <div class="band">
     <h2>Stop paying for things you forgot to cancel.</h2>
-    <p>EasyCancel launches soon — be first to know. Built by VINCLI LTD for people in the EU &amp; UK.</p>
-    <form class="waitlist" id="waitlist-form" novalidate>
-      <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <input class="wl-email" id="wl-email" type="email" name="email" required
-             placeholder="you@example.com" aria-label="Email address" autocomplete="email">
-      <button class="btn" type="submit">Get notified at launch</button>
-    </form>
-    <p class="wl-msg" id="wl-msg" role="status" aria-live="polite" hidden></p>
+    <p>EasyCancel is available now on the App Store. Free to download — built by VINCLI LTD for people in the EU &amp; UK.</p>
+    <div class="cta-row" style="justify-content:center">
+      <a class="btn-appstore js-appstore" href="https://apps.apple.com/app/id6772546181" aria-label="Download EasyCancel on the App Store">
+        <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM256.6 93.2c30.1-35.7 27.4-68.2 26.5-79.9-26.6 1.5-57.4 18.1-74.9 38.5-19.3 21.9-30.6 49-28.2 79.3 28.8 2.2 55.1-12.6 76.6-37.9z"/></svg>
+        <span class="as-lab"><small>Download on the</small><b>App Store</b></span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -311,7 +321,7 @@
         <a href="terms.html">Terms of Use</a>
         <a href="privacy.html">Privacy Policy</a>
         <a href="support.html">Support</a>
-        <a href="mailto:support@vincli.com">Contact</a>
+        <a href="mailto:hello@vincli.com">Contact</a>
       </div>
     </div>
     <p class="fine">© 2026 VINCLI LTD. EasyCancel is a subscription-management tool and does not provide legal advice. Cooling-off rights vary by country and contract.</p>
@@ -319,77 +329,10 @@
 </footer>
 
 <script>
+// EasyCancel App Store link — change in ONE place if the URL ever updates.
 (function () {
-  var SUPABASE_URL = "https://jinzwwsbuwvemwmcqfqw.supabase.co/rest/v1/waitlist";
-  var SUPABASE_KEY = "sb_publishable_bcSRSVHBM3kBBdgq2gs3PA_oo7XYFBZ";
-
-  var form = document.getElementById("waitlist-form");
-  var emailInput = document.getElementById("wl-email");
-  var msg = document.getElementById("wl-msg");
-
-  function isValidEmail(value) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  }
-
-  function showMessage(text, replaceForm) {
-    msg.textContent = text;
-    msg.hidden = false;
-    if (replaceForm && form) form.hidden = true;
-  }
-
-  // Focus the email input when a waitlist CTA is clicked (after smooth scroll).
-  document.querySelectorAll(".js-waitlist").forEach(function (link) {
-    link.addEventListener("click", function () {
-      window.setTimeout(function () {
-        if (!form || form.hidden) return;
-        emailInput.focus({ preventScroll: true });
-      }, 450);
-    });
-  });
-
-  if (!form) return;
-
-  form.addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    // Honeypot: if filled, it's a bot — pretend success, skip the API.
-    var honeypot = form.querySelector('input[name="company"]');
-    if (honeypot && honeypot.value.trim() !== "") {
-      showMessage("You're on the list — we'll email you the moment EasyCancel launches.", true);
-      return;
-    }
-
-    var email = emailInput.value.trim();
-    if (!isValidEmail(email)) {
-      showMessage("Please enter a valid email address.", false);
-      emailInput.focus();
-      return;
-    }
-
-    var locale = (navigator.language && navigator.language.slice(0, 2)) || "en";
-
-    fetch(SUPABASE_URL, {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify({ email: email, locale: locale, source: "landing" })
-    })
-      .then(function (res) {
-        if (res.status === 201) {
-          showMessage("You're on the list — we'll email you the moment EasyCancel launches.", true);
-        } else if (res.status === 409) {
-          showMessage("You're already on the list ✓", true);
-        } else {
-          showMessage("Something went wrong — please try again.", false);
-        }
-      })
-      .catch(function () {
-        showMessage("Something went wrong — please try again.", false);
-      });
-  });
+  var APP_STORE_URL = "https://apps.apple.com/app/id6772546181";
+  document.querySelectorAll(".js-appstore").forEach(function (a) { a.href = APP_STORE_URL; });
 })();
 </script>
 
